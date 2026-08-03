@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "WhatsApp Bot Mashle v1.0 criado pelo Peter",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
