@@ -1,6 +1,6 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
-const { GoogleGenAI } = require('@google/genai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const express = require('express');
 const axios = require('axios');
 const pino = require('pino');
@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "SUA_API_KEY_DO_GEMINI";
 const NUMERO_BOT = process.env.NUMERO_BOT || "258843297841"; 
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+// Inicialização com a biblioteca estável
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const gruposConfig = {}; 
 const antiFloodUsuarios = {};
 
@@ -24,7 +25,6 @@ app.listen(PORT, () => console.log(`Servidor a rodar na porta ${PORT}`));
 async function ligarBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session_mashle');
 
-    // Configuração com o emulador de navegador correto para evitar erros de ligação
     const sock = makeWASocket({
         logger: pino({ level: 'silent' }),
         auth: state,
@@ -159,9 +159,12 @@ async function ligarBot() {
         if (comando === '!ia') {
             if (!args) return sock.sendMessage(de, { text: "❌ Escreva algo para o bot processar." });
             try {
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                 const promptDoPeter = `O teu nome é mashle-bot-1.0. Tu foste criado pelo desenvolvedor Peter. Responde de forma direta, prestativa e às vezes usa referências a treinos físicos ou éclairs de chocolate como o personagem Mashle. Responde à seguinte pergunta: ${args}`;
-                const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: promptDoPeter });
-                await sock.sendMessage(de, { text: `🤖 *Mashle IA:* ${response.text}` });
+                
+                const result = await model.generateContent(promptDoPeter);
+                const response = await result.response;
+                await sock.sendMessage(de, { text: `🤖 *Mashle IA:* ${response.text()}` });
             } catch (e) {
                 await sock.sendMessage(de, { text: "❌ Falha no processamento da IA." });
             }
@@ -190,4 +193,4 @@ async function ligarBot() {
 }
 
 ligarBot();
-    
+            
