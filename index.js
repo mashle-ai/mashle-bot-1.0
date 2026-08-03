@@ -1,9 +1,9 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
-const { Boom } = require('@hapi/boom');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const express = require('express');
-const axios = require('axios');
-const pino = require('pino');
+import makeWASocket, { useMultiFileAuthState, DisconnectReason } from '@whiskeysockets/baileys';
+import { Boom } from '@hapi/boom';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import express from 'express';
+import axios from 'axios';
+import pino from 'pino';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +25,7 @@ app.listen(PORT, () => console.log(`Servidor a rodar na porta ${PORT}`));
 async function ligarBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session_mashle');
 
-    const sock = makeWASocket({
+    const sock = makeWASocket.default({
         logger: pino({ level: 'silent' }),
         auth: state,
         printQRInTerminal: false,
@@ -193,4 +193,4 @@ async function ligarBot() {
 }
 
 ligarBot();
-            
+        
