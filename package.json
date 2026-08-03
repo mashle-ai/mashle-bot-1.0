@@ -1,15 +1,16 @@
 {
-  "name": "mashle-bot",
+  "name": "mashle-bot-1.0",
   "version": "1.0.0",
-  "description": "WhatsApp Bot Mashle com IA e Musica",
-  "main": "server.js",
+  "description": "WhatsApp Bot Mashle v1.0 criado pelo Peter",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",
     "@google/genai": "^0.1.1",
     "axios": "^1.7.9",
-    "body-parser": "^1.20.3",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pino": "^9.0.0"
   }
 }
